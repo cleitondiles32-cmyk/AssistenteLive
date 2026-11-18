@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AssistenteLive — 0.24.43 · Restauração de configurações</title>
+  <link rel="stylesheet" href="styles/overlay.css">
+  <script defer src="agents/merlin/merlin-data.js"></script>
+  <script defer src="agents/clippy/clippy-data.js"></script>
+  <script defer src="agents/bonzi/bonzi-data.js"></script>
+  <script defer src="agents/courtney/courtney-data.js"></script>
+  <script defer src="agents/earl/earl-data.js"></script>
+  <script defer src="agents/genie/genie-data.js"></script>
+  <script defer src="agents/peedy/peedy-data.js"></script>
+  <script defer src="agents/robby/robby-data.js"></script>
+  <script defer src="agents/rover/rover-data.js"></script>
+  <script defer src="agents/victor/victor-data.js"></script>
+  <script defer src="agents/catalog.js"></script>
+  <script defer src="data/masterizacoes-teste.js"></script>
+  <script defer src="core/messages.js"></script>
+  <script defer src="data/eventos-config.js"></script>
+  <script defer src="core/events.js"></script>
+  <script defer src="core/events-panel.js"></script>
+  <script defer src="core/events-auto.js"></script>
+  <script defer src="core/agents.js"></script>
+  <script defer src="core/runtime.js"></script>
+  <script defer src="core/animation.js"></script>
+  <script defer src="core/event-image.js"></script>
+  <script defer src="core/presentation.js"></script>
+  <script defer src="core/tabs.js"></script>
+  <script defer src="core/merlin-settings.js"></script>
+  <script defer src="core/merlin-panel.js"></script>
+  <script defer src="core/configuration.js"></script>
+  <script defer src="core/agent-animations.js"></script>
+  <script defer src="core/selector.js"></script>
+  <script defer src="core/main.js"></script>
+</head>
+<body>
+  <main id="stage" hidden>
+    <canvas id="agent" width="128" height="128" aria-label="Merlin"></canvas>
+    <div id="bubble" role="status" hidden></div>
+  </main>
+  <section id="settings" aria-labelledby="panel-title" hidden>
+    <header class="panel-header">
+      <div class="panel-heading"><h1 id="panel-title">AssistenteLive</h1><span class="eyebrow">0.24.43</span><p id="selected-agent-name">Carregando…</p></div>
+      <button id="close-panel" type="button" aria-label="Fechar painel">Fechar · F1</button>
+    </header>
+    <nav class="panel-tabs" role="tablist" aria-label="Seções do painel">
+      <button id="tab-mascotes" role="tab" type="button" aria-controls="pane-mascotes" aria-selected="true">Agents</button>
+      <button id="tab-merlin" role="tab" type="button" aria-controls="pane-merlin" aria-selected="false" tabindex="-1">Balão de conversa</button>
+      <button id="tab-anuncios" role="tab" type="button" aria-controls="pane-anuncios" aria-selected="false" tabindex="-1">Anúncios</button>
+      <button id="tab-anuncios-locais" role="tab" type="button" aria-controls="pane-anuncios-locais" aria-selected="false" tabindex="-1">Anúncios locais</button>
+      <button id="tab-merlin-fila" role="tab" type="button" aria-controls="pane-merlin-fila" aria-selected="false" tabindex="-1">Masterizações</button>
+      <button id="tab-sons" role="tab" type="button" aria-controls="pane-sons" aria-selected="false" tabindex="-1">Sons</button>
+      <button id="tab-membros" role="tab" type="button" aria-controls="pane-membros" aria-selected="false" tabindex="-1">Membros</button>
+      <button id="tab-console" role="tab" type="button" aria-controls="pane-console" aria-selected="false" tabindex="-1">Consoles</button>
+      <button id="tab-configuracoes" role="tab" type="button" aria-controls="pane-configuracoes" aria-selected="false" tabindex="-1">Configurações</button>
+      <button id="tab-mensagens" role="tab" type="button" aria-controls="pane-mensagens" aria-selected="false" tabindex="-1" hidden>Mensagens de teste</button>
+    </nav>
+    <section id="pane-mascotes" class="tab-pane" role="tabpanel" aria-labelledby="tab-mascotes">
+      <p class="tab-description">Escolha o Agent que quer editar e teste. Defina também quais Agents vão se alternar nas mensagens.</p>
+      <fieldset id="agent-options"><legend>Agents</legend><div id="agent-grid"></div></fieldset>
+      <fieldset class="agent-presenter-options"><legend>Agents que apresentam mensagens</legend><p class="tab-description">Marque um ou mais Agents. Eles se alternam a cada anúncio, incluindo masterizações e anúncios locais.</p><div id="agent-presenter-grid" role="group" aria-label="Agents que apresentam mensagens"></div></fieldset>
+      <fieldset class="agent-editor">
+        <legend>Editar Agent selecionado</legend>
+        <label for="agent-edit-name">Nome exibido</label>
+        <input id="agent-edit-name" type="text" maxlength="40" autocomplete="off">
+        <label for="agent-edit-width">Tamanho na tela <output id="agent-edit-width-value">192 px</output></label>
+        <input id="agent-edit-width" type="range" min="96" max="400" step="8" value="192">
+        <button id="agent-edit-reset" type="button">Restaurar padrão deste Agent</button>
+        <div class="agent-position-setting">
+          <strong>Local do Agent na tela</strong>
+          <span class="agent-position-hint">Marque um ou mais locais. Com vários marcados, o Agent escolhe entre eles a cada aparição.</span>
+          <div id="agent-position-picker" class="agent-position-picker" role="group" aria-label="Local do Agent na tela">
+            <button type="button" class="agent-position-option" data-position="top-left" aria-pressed="false">Superior esquerdo</button>
+            <button type="button" class="agent-position-option" data-position="top-center" aria-pressed="false">Superior central</button>
+            <button type="button" class="agent-position-option" data-position="top-right" aria-pressed="false">Superior direito</button>
+            <button type="button" class="agent-position-option" data-position="center-left" aria-pressed="false">Centro esquerdo</button>
+            <button type="button" class="agent-position-option" data-position="center" aria-pressed="false">Centro</button>
+            <button type="button" class="agent-position-option" data-position="center-right" aria-pressed="false">Centro direito</button>
+            <button type="button" class="agent-position-option" data-position="bottom-left" aria-pressed="true">Inferior esquerdo</button>
+            <button type="button" class="agent-position-option" data-position="bottom-center" aria-pressed="false">Inferior central</button>
+            <button type="button" class="agent-position-option" data-position="bottom-right" aria-pressed="false">Inferior direito</button>
+          </div>
+        </div>
+        <div class="agent-global-animation-mode">
+          <strong>Modo das animações da mensagem (todos os Agents)</strong>
+          <div class="agent-animation-mode" role="group" aria-label="Modo global das animações da mensagem">
+            <label><input type="radio" name="agent-message-mode" value="loop"><span>Repetir a mesma em loop</span></label>
+            <label><input type="radio" name="agent-message-mode" value="rotate"><span>Alternar entre as escolhidas</span></label>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="agent-animation-editor">
+        <legend>Animações do anúncio</legend>
+        <p class="tab-description">Cada animação aparece uma vez. Use ▶ para pré-visualizar e marque Entrada, Mensagem ou Saída para incluí-la naquela etapa. Várias opções podem ser marcadas em cada etapa. A configuração vale apenas para o Agent selecionado.</p>
+        <div class="agent-animation-preview">
+          <canvas id="agent-animation-preview-canvas" width="128" height="128" aria-label="Prévia da animação do Agent"></canvas>
+          <div class="agent-animation-preview-info"><strong id="agent-animation-preview-name">Prévia das animações</strong><span>A prévia ampliada fica visível enquanto você percorre as opções.</span><div><button id="agent-animation-preview-sequence" type="button">Prévia completa</button><button id="agent-animation-preview-stop" type="button" disabled>Parar prévia</button></div></div>
+        </div>
+        <div class="agent-animation-tools">
+          <div><label for="agent-animation-search">Animações disponíveis</label><input id="agent-animation-search" type="search" placeholder="Filtrar animações…" autocomplete="off"></div>
+          <button id="agent-animation-reset" type="button">Restaurar opções padrão</button>
+        </div>
+        <div class="agent-animation-list-header"><span>Animação</span><span title="Pré-visualizar">▶</span><span>Entrada</span><span>Mensagem</span><span>Saída</span></div>
+        <div id="agent-animation-list" class="agent-animation-list" aria-live="polite"></div>
+        <p id="agent-animation-status" class="setting-hint" role="status" aria-live="polite">Escolha um Agent para configurar a sequência.</p>
+      </fieldset>
+    </section>
+    <section id="pane-merlin-fila" class="tab-pane" role="tabpanel" aria-labelledby="tab-merlin-fila" hidden>
+      <h2>Masterizações coletadas</h2>
+      <p class="tab-description">A coleta é somente leitura e atualiza automaticamente mesmo com o painel fechado. Confira cada mensagem como ficará no balão; as pendentes são anunciadas da mais antiga para a mais recente.</p>
+      <section class="sheet-collection-controls" aria-labelledby="sheet-collection-title">
+        <div class="sheet-collection-heading">
+          <div><h3 id="sheet-collection-title">Coleta de masterizações</h3><p class="tab-description">Leitura direta da aba Masterizações do Google Sheets. As preferências são salvas neste OBS.</p></div>
+          <button id="merlin-sheet-refresh" type="button">Atualizar agora</button>
+        </div>
+        <div class="sheet-collection-options">
+          <label class="merlin-option"><input id="merlin-auto-collect" type="checkbox" checked><span>Atualizar automaticamente</span></label>
+          <label class="merlin-option"><input id="merlin-show-collected" type="checkbox" checked><span>Mostrar lista coletada</span></label>
+        </div>
+        <p id="merlin-collect-status" role="status" aria-live="polite">Ainda não carreguei as masterizações.</p>
+        <div id="merlin-collected-list" class="merlin-collected-list"></div>
+      </section>
+      <div class="merlin-queue-controls" role="group" aria-label="Controles da fila do Merlin">
+        <button id="merlin-announce-pending" type="button" disabled>Anunciar pendentes agora</button>
+        <button id="merlin-clear-history" type="button" disabled>Limpar cache e buscar novamente</button>
+      </div>
+      <p id="merlin-queue-status" role="status" aria-live="polite">Ainda não carreguei as masterizações.</p>
+      <div id="merlin-queue-list" class="merlin-queue-list" aria-live="polite"></div>
+    </section>
+    <section id="pane-anuncios" class="tab-pane" role="tabpanel" aria-labelledby="tab-anuncios" hidden>
+      <h2>Anúncios de eventos</h2>
+      <p class="tab-description">A lista é carregada ao iniciar e atualizada a cada minuto, sem depender desta aba. Anúncios criados vêm da aba Eventos e seguem as datas e a hora final. Eventos do Hall vêm da aba Geral eventos e aparecem enquanto o Status estiver ativo. As duas listas compartilham as configurações abaixo.</p>
+      <fieldset class="event-image-options event-reading-setting">
+        <legend>Tempo de exibição de cada anúncio</legend>
+        <label for="event-reading-seconds">Segundos por mensagem</label>
+        <input id="event-reading-seconds" type="number" min="3" max="120" step="1" value="20">
+        <span class="setting-hint">Usado nas mensagens desta aba, inclusive na sequência automática.</span>
+      </fieldset>
+      <section class="auto-controls" aria-label="Intervalo automático">
+        <label for="auto-interval">Intervalo geral entre anúncios (minutos)</label>
+        <input id="auto-interval" type="number" min="0" max="10080" step="1" value="120">
+        <p id="auto-status" role="status">Carregando intervalo salvo…</p>
+        <p class="tab-description">O intervalo vale para todos os anúncios selecionados. 0 desativa a apresentação automática. Abrir o painel com F1 pausa a apresentação.</p>
+      </section>
+      <p class="tab-description">Marque quais mensagens podem ser anunciadas automaticamente.</p>
+      <fieldset class="event-image-options">
+        <legend>Novos anúncios vêm</legend>
+        <div class="merlin-option-list">
+          <label class="merlin-option"><input type="radio" name="new-event-default-selected" value="true"><span>Ativados</span></label>
+          <label class="merlin-option"><input type="radio" name="new-event-default-selected" value="false"><span>Desativados</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="event-image-options">
+        <legend>Lado da imagem na prévia</legend>
+        <div class="merlin-option-list">
+          <label class="merlin-option"><input type="radio" name="event-image-position" value="left"><span>À esquerda do texto</span></label>
+          <label class="merlin-option"><input type="radio" name="event-image-position" value="right"><span>À direita do texto</span></label>
+        </div>
+      </fieldset>
+      <div class="events-controls" role="group" aria-label="Eventos da planilha">
+        <button id="load-events" type="button">Atualizar mensagens ativas</button>
+        <button id="select-all-events" type="button" disabled>Selecionar todas</button>
+        <button id="select-no-events" type="button" disabled>Desmarcar todas</button>
+        <button id="announce-all-events" type="button" disabled>Anunciar selecionadas agora</button>
+        <button id="stop-events" type="button" disabled>Parar sequência</button>
+      </div>
+      <p id="events-status" role="status">Mensagens ainda não consultadas.</p>
+      <div id="event-announcements" class="event-announcements" aria-live="polite"></div>
+    </section>
+    <section id="pane-anuncios-locais" class="tab-pane" role="tabpanel" aria-labelledby="tab-anuncios-locais" hidden>
+      <h2>Anúncios locais</h2>
+      <p class="tab-description">Crie lembretes para a live sem planilha. Selecione quais podem entrar na sequência automática e ajuste o tempo, o intervalo e a posição da imagem.</p>
+      <fieldset class="event-image-options event-reading-setting local-reading-setting">
+        <legend>Tempo de exibição de cada anúncio local</legend>
+        <label for="local-reading-seconds">Segundos por mensagem</label>
+        <input id="local-reading-seconds" type="number" min="3" max="120" step="1" value="20">
+        <span class="setting-hint">Usado nas apresentações manuais e automáticas.</span>
+      </fieldset>
+      <section class="auto-controls local-auto-controls" aria-label="Intervalo automático dos anúncios locais">
+        <label for="local-auto-interval">Intervalo entre anúncios locais (minutos)</label>
+        <input id="local-auto-interval" type="number" min="0" max="10080" step="1" value="60">
+        <p id="local-auto-status" role="status">Carregando intervalo salvo…</p>
+        <p class="tab-description">0 desativa a apresentação automática dos anúncios locais. O intervalo começa após cada mensagem terminar.</p>
+      </section>
+      <fieldset class="event-image-options">
+        <legend>Lado da imagem na prévia e no balão</legend>
+        <div class="merlin-option-list">
+          <label class="merlin-option"><input type="radio" name="local-image-position" value="left"><span>À esquerda do texto</span></label>
+          <label class="merlin-option"><input type="radio" name="local-image-position" value="right"><span>À direita do texto</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="local-announcement-editor">
+        <legend id="local-announcement-editor-title">Criar anúncio</legend>
+        <label for="local-announcement-title">Título</label>
+        <input id="local-announcement-title" type="text" maxlength="100" autocomplete="off" placeholder="Ex.: Bebam água">
+        <label for="local-announcement-message">Mensagem</label>
+        <textarea id="local-announcement-message" rows="3" maxlength="350" placeholder="Escreva o lembrete para a live"></textarea>
+        <label for="local-announcement-image">Imagem (URL, opcional)</label>
+        <input id="local-announcement-image" type="url" maxlength="2048" autocomplete="url" placeholder="https://…">
+        <div class="local-announcement-editor-actions">
+          <button id="local-announcement-save" type="button">Adicionar anúncio</button>
+          <button id="local-announcement-cancel" type="button" hidden>Cancelar edição</button>
+        </div>
+        <p id="local-announcement-status" class="setting-hint" role="status" aria-live="polite">As mensagens ficam salvas neste OBS.</p>
+      </fieldset>
+      <div class="local-announcement-controls">
+        <button id="local-announcement-select-all" type="button">Selecionar locais</button>
+        <button id="local-announcement-select-none" type="button">Desmarcar locais</button>
+        <button id="local-announcement-announce" type="button">Anunciar selecionadas agora</button>
+        <button id="local-announcement-stop" type="button" disabled>Parar sequência</button>
+      </div>
+      <p id="local-announcement-count" class="event-announcements-empty"></p>
+      <div id="local-announcement-list" class="event-announcements" aria-live="polite"></div>
+    </section>
+    <section id="pane-merlin" class="tab-pane" role="tabpanel" aria-labelledby="tab-merlin" hidden>
+      <h2>Balão de conversa</h2>
+      <p class="tab-description">Configure o texto, as imagens e a aparência das mensagens. As escolhas ficam salvas neste OBS.</p>
+      <div class="merlin-settings-grid">
+      <fieldset class="merlin-setting merlin-options merlin-color-setting">
+        <legend>Cor do balão</legend>
+        <label for="merlin-bubble-color-picker">Cor de fundo</label>
+        <div class="bubble-color-controls"><input id="merlin-bubble-color-picker" type="color" value="#fffdf5" aria-label="Escolher cor do balão"><input id="merlin-bubble-color-hex" type="text" value="#fffdf5" maxlength="7" spellcheck="false" aria-label="Código hexadecimal da cor"><button id="merlin-bubble-color-reset" type="button">Restaurar padrão</button></div>
+        <div class="bubble-color-swatches" role="group" aria-label="Cores sugeridas">
+          <button type="button" data-bubble-color="#fffdf5" aria-label="Creme" title="Creme"></button><button type="button" data-bubble-color="#ffffff" aria-label="Branco" title="Branco"></button><button type="button" data-bubble-color="#d9c7ff" aria-label="Lavanda" title="Lavanda"></button><button type="button" data-bubble-color="#bfe7ff" aria-label="Azul claro" title="Azul claro"></button><button type="button" data-bubble-color="#c9f2d1" aria-label="Verde claro" title="Verde claro"></button><button type="button" data-bubble-color="#ffe3a3" aria-label="Amarelo claro" title="Amarelo claro"></button><button type="button" data-bubble-color="#ffc7d4" aria-label="Rosa claro" title="Rosa claro"></button><button type="button" data-bubble-color="#302c3e" aria-label="Roxo escuro" title="Roxo escuro"></button>
+        </div>
+      </fieldset>
+      <div class="merlin-setting merlin-template-setting">
+        <label for="merlin-template">Modelo da mensagem</label>
+          <textarea id="merlin-template" rows="2" maxlength="500" spellcheck="false">{Membro} platinou {Jogo} ({Console}) em {Tempo} — {Evento}</textarea>
+          <p class="setting-hint">Chaves: <code>{Membro}</code>, <code>{Jogo}</code>, <code>{Console}</code>, <code>{Tempo}</code> e <code>{Evento}</code>.</p>
+          <label for="merlin-reading-seconds">Tempo de exibição da mensagem (segundos)</label>
+          <input id="merlin-reading-seconds" type="number" min="3" max="120" step="1" value="12">
+      </div>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Tamanho do texto</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-font-size" value="small"><span>Pequeno</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-size" value="medium"><span>Médio</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-size" value="large"><span>Grande</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-size" value="xlarge"><span>Extra grande</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Fonte do texto</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-font-family" value="arial"><span style="font-family:Arial,sans-serif">Arial</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-family" value="verdana"><span style="font-family:Verdana,sans-serif">Verdana</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-family" value="trebuchet"><span style="font-family:'Trebuchet MS',sans-serif">Trebuchet MS</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-family" value="georgia"><span style="font-family:Georgia,serif">Georgia</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-font-family" value="courier"><span style="font-family:'Courier New',monospace">Courier New</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Imagens do anúncio</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input id="merlin-show-game-image" type="checkbox"><span>Mostrar capa do jogo</span></label>
+            <label class="merlin-option"><input id="merlin-show-member-image" type="checkbox"><span>Mostrar foto do membro</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Lado da foto do membro</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-member-position" value="left"><span>À esquerda do texto</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-member-position" value="right"><span>À direita do texto</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Lado da capa do jogo</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-game-position" value="left"><span>À esquerda do texto</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-game-position" value="right"><span>À direita do texto</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Formato da foto do membro</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-member-image-shape" value="square"><span>Quadrada</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-member-image-shape" value="circle"><span>Redonda</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Tamanho das imagens</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-image-size" value="small"><span>Pequeno</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-image-size" value="medium"><span>Médio</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-image-size" value="large"><span>Grande</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-image-size" value="auto"><span>Automático (altura do texto)</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Largura do balão</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-bubble-width" value="auto"><span>Automática</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-bubble-width" value="480"><span>480 px</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-bubble-width" value="640"><span>640 px</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-bubble-width" value="800"><span>800 px</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-bubble-width" value="1000"><span>1000 px</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Como mostrar o tempo</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-time-format" value="human"><span>Horas e minutos</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-time-format" value="dhm"><span>Dias, horas e minutos</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-time-format" value="hms"><span>Horas, minutos e segundos</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-time-format" value="seconds"><span>Total em segundos</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="merlin-setting merlin-options">
+          <legend>Masterizações antigas</legend>
+          <div class="merlin-option-list">
+            <label class="merlin-option"><input type="radio" name="merlin-history-policy" value="new-only"><span>Só as novas, a partir de agora</span></label>
+            <label class="merlin-option"><input type="radio" name="merlin-history-policy" value="unannounced"><span>Todas que ainda não foram anunciadas</span></label>
+          </div>
+        </fieldset>
+      <div class="merlin-preview" id="merlin-preview" role="button" tabindex="0" aria-label="Trocar exemplo aleatório da prévia" title="Clique para trocar o exemplo">
+        <strong>Prévia · clique para trocar o exemplo</strong>
+        <div class="merlin-preview-content">
+          <div id="merlin-preview-bubble" class="merlin-preview-bubble message-width-auto">
+            <p id="merlin-template-preview" aria-live="polite">Blumzeira platinou Penguin Land (Master System) em 810 horas e 53 minutos — Penguin Land (Master System)</p>
+          </div>
+        </div>
+      </div>
+      </div>
+      <p id="merlin-settings-status" role="status" class="setting-hint">Preferências salvas neste OBS.</p>
+    </section>
+    <section id="pane-console" class="tab-pane" role="tabpanel" aria-labelledby="tab-console" hidden>
+      <h2>Nomes dos consoles</h2>
+      <p class="tab-description">Escolha como o valor de cada console será exibido quando usar a chave {Console}. Em branco, mantém o nome original do catálogo do Hall.</p>
+      <div id="console-name-list" class="console-name-list"><p class="tab-description">Carregando consoles do Hall…</p></div>
+    </section>
+    <section id="pane-configuracoes" class="tab-pane" role="tabpanel" aria-labelledby="tab-configuracoes" hidden>
+      <h2>Configurações do AssistenteLive</h2>
+      <p class="tab-description">Exporte suas preferências para usar em outro OBS ou importe um arquivo salvo. Restaurar os padrões reinicia apenas as configurações; o cache e o histórico de masterizações ficam preservados.</p>
+      <div class="configuration-actions">
+        <button id="export-settings" type="button">Exportar configurações</button>
+        <button id="copy-settings" type="button" hidden>Copiar JSON</button>
+        <button id="import-settings" type="button">Importar configurações</button>
+        <input id="settings-file" type="file" accept="application/json,.json" hidden>
+        <button id="restore-settings" type="button" class="restore-settings-button">Restaurar padrões</button>
+      </div>
+      <div id="restore-settings-confirmation" class="restore-settings-confirmation" role="group" aria-label="Confirmar restauração" hidden>
+        <p>Isso apaga suas preferências salvas. O cache e o histórico de masterizações serão preservados.</p>
+        <button id="confirm-restore-settings" type="button" class="restore-settings-button">Confirmar restauração</button>
+        <button id="cancel-restore-settings" type="button">Cancelar</button>
+      </div>
+      <p id="configuration-status" class="configuration-status" role="status" aria-live="polite">As configurações ficam salvas neste OBS.</p>
+      <label id="settings-export-label" for="settings-export-data" hidden>JSON das configurações</label>
+      <textarea id="settings-export-data" class="settings-export-data" rows="10" readonly hidden></textarea>
+      <div class="configuration-paste-import">
+        <label for="settings-import-data">Importar configurações copiadas</label>
+        <p class="tab-description">Cole aqui o JSON copiado de outro OBS e importe sem criar um arquivo.</p>
+        <textarea id="settings-import-data" class="settings-export-data" rows="6" placeholder="Cole o conteúdo JSON aqui"></textarea>
+        <button id="import-pasted-settings" type="button">Importar JSON colado</button>
+      </div>
+    </section>
+    <section id="pane-membros" class="tab-pane" role="tabpanel" aria-labelledby="tab-membros" hidden>
+      <h2>Nomes dos membros</h2>
+      <p class="tab-description">Em branco, mantém o nome original da planilha. Escreva um nome para personalizar; inclua * no campo para impedir que as masterizações desse membro sejam anunciadas.</p>
+      <div id="member-name-list" class="console-name-list"><p class="tab-description">Os membros aparecem depois da primeira coleta.</p></div>
+    </section>
+    <section id="pane-sons" class="tab-pane" role="tabpanel" aria-labelledby="tab-sons" hidden>
+      <h2>Sons dos anúncios</h2>
+      <p class="tab-description">Configure ativação, efeito, arquivo de áudio e volume separadamente para cada tipo de mensagem.</p>
+      <div class="sound-category-grid">
+        <fieldset class="sound-category-setting" data-sound-category="masterizations">
+          <legend>Masterizações</legend>
+          <label class="merlin-option"><input type="checkbox" data-sound-enabled><span>Ativar som</span></label>
+          <strong>Som escolhido</strong>
+          <div class="merlin-sound-type-options" role="radiogroup" aria-label="Som de masterizações">
+            <label class="merlin-option"><input type="radio" name="sound-type-masterizations" value="magic"><span>Sino mágico</span></label><label class="merlin-option"><input type="radio" name="sound-type-masterizations" value="arcade"><span>Arcade</span></label><label class="merlin-option"><input type="radio" name="sound-type-masterizations" value="coin"><span>Moeda retrô</span></label><label class="merlin-option"><input type="radio" name="sound-type-masterizations" value="soft"><span>Aviso suave</span></label><label class="merlin-option"><input type="radio" name="sound-type-masterizations" value="custom"><span>Arquivo personalizado</span></label>
+          </div>
+          <div class="merlin-sound-file"><button type="button" data-sound-choose>Escolher arquivo de áudio</button><button type="button" data-sound-remove>Remover arquivo</button><input type="file" data-sound-file accept="audio/*" hidden><span class="setting-hint" data-sound-name>Nenhum arquivo personalizado carregado. Máximo: 650 KB.</span></div>
+          <label>Volume <output data-sound-volume-value>35%</output></label><input type="range" data-sound-volume min="0" max="100" step="1" value="35"><button type="button" data-sound-test>Testar som</button>
+        </fieldset>
+        <fieldset class="sound-category-setting" data-sound-category="announcements">
+          <legend>Anúncios</legend>
+          <label class="merlin-option"><input type="checkbox" data-sound-enabled><span>Ativar som</span></label>
+          <strong>Som escolhido</strong>
+          <div class="merlin-sound-type-options" role="radiogroup" aria-label="Som dos anúncios">
+            <label class="merlin-option"><input type="radio" name="sound-type-announcements" value="magic"><span>Sino mágico</span></label><label class="merlin-option"><input type="radio" name="sound-type-announcements" value="arcade"><span>Arcade</span></label><label class="merlin-option"><input type="radio" name="sound-type-announcements" value="coin"><span>Moeda retrô</span></label><label class="merlin-option"><input type="radio" name="sound-type-announcements" value="soft"><span>Aviso suave</span></label><label class="merlin-option"><input type="radio" name="sound-type-announcements" value="custom"><span>Arquivo personalizado</span></label>
+          </div>
+          <div class="merlin-sound-file"><button type="button" data-sound-choose>Escolher arquivo de áudio</button><button type="button" data-sound-remove>Remover arquivo</button><input type="file" data-sound-file accept="audio/*" hidden><span class="setting-hint" data-sound-name>Nenhum arquivo personalizado carregado. Máximo: 650 KB.</span></div>
+          <label>Volume <output data-sound-volume-value>35%</output></label><input type="range" data-sound-volume min="0" max="100" step="1" value="35"><button type="button" data-sound-test>Testar som</button>
+        </fieldset>
+        <fieldset class="sound-category-setting" data-sound-category="localAnnouncements">
+          <legend>Anúncios locais</legend>
+          <label class="merlin-option"><input type="checkbox" data-sound-enabled><span>Ativar som</span></label>
+          <strong>Som escolhido</strong>
+          <div class="merlin-sound-type-options" role="radiogroup" aria-label="Som dos anúncios locais">
+            <label class="merlin-option"><input type="radio" name="sound-type-localAnnouncements" value="magic"><span>Sino mágico</span></label><label class="merlin-option"><input type="radio" name="sound-type-localAnnouncements" value="arcade"><span>Arcade</span></label><label class="merlin-option"><input type="radio" name="sound-type-localAnnouncements" value="coin"><span>Moeda retrô</span></label><label class="merlin-option"><input type="radio" name="sound-type-localAnnouncements" value="soft"><span>Aviso suave</span></label><label class="merlin-option"><input type="radio" name="sound-type-localAnnouncements" value="custom"><span>Arquivo personalizado</span></label>
+          </div>
+          <div class="merlin-sound-file"><button type="button" data-sound-choose>Escolher arquivo de áudio</button><button type="button" data-sound-remove>Remover arquivo</button><input type="file" data-sound-file accept="audio/*" hidden><span class="setting-hint" data-sound-name>Nenhum arquivo personalizado carregado. Máximo: 650 KB.</span></div>
+          <label>Volume <output data-sound-volume-value>35%</output></label><input type="range" data-sound-volume min="0" max="100" step="1" value="35"><button type="button" data-sound-test>Testar som</button>
+        </fieldset>
+      </div>
+    </section>
+    <section id="pane-mensagens" class="tab-pane" role="tabpanel" aria-labelledby="tab-mensagens" hidden>
+      <h2>Mensagens de teste</h2>
+      <p class="tab-description">Exemplos locais para conferir o balão e as animações, sem consultar a planilha.</p>
+      <div class="message-choice" role="group" aria-labelledby="message-choice-label">
+        <span id="message-choice-label">Escolha o exemplo</span>
+        <button id="example-curto" type="button" aria-pressed="true">Nomes curtos</button>
+        <button id="example-longo" type="button" aria-pressed="false">Nomes longos</button>
+        <button id="example-saudacao" type="button" aria-pressed="false">Saudação</button>
+      </div>
+      <button id="test-agent" type="button" disabled>Testar personagem</button>
+      <p class="panel-hint">O teste fecha o painel e executa entrada, mensagem e saída. Reabra com F1 para continuar.</p>
+    </section>
+    <footer class="panel-footer">
+      <p id="panel-status" role="status" aria-live="polite">Carregando personagens…</p>
+      <p id="storage-note"></p>
+    </footer>
+  </section>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

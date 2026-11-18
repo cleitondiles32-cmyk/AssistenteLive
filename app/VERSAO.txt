@@ -1,0 +1,32 @@
+AssistenteLive overlay 0.24.43 — restauração sem diálogo bloqueado
+Cloudflare Worker atualizado para 0.18.16: estado movido do KV para a aba oculta `_Estado Assistente` na planilha, com migração única do KV antigo.
+Atualize somente os arquivos da fonte OBS pelo ZIP AssistenteLive-Marco-001-Anuncios-hall-0.24.43.zip. O Worker não precisa ser alterado. A confirmação da restauração agora aparece dentro do painel.
+Atualize somente os arquivos da fonte OBS pelo ZIP AssistenteLive-Marco-001-Anuncios-hall-0.24.38.zip. O Worker não precisa ser alterado. Ao abrir o painel, o estado aberto é aplicado antes de liberar filas pendentes, impedindo uma apresentação automática de começar atrás do menu. Retomar uma fila também não reativa os temporizadores enquanto o painel permanecer aberto.
+Atualize somente os arquivos da fonte OBS pelo ZIP AssistenteLive-Marco-001-Anuncios-hall-0.24.36.zip. O Worker não precisa ser alterado. Corrigido o encaminhamento do áudio para as categorias de anúncios e anúncios locais. Cada tipo de mensagem agora usa o som configurado na aba Sons.
+
+As abas agora são Agents, Anúncios, Balão de conversa, Console, Masterizações, Membros e Sons. Agents podem ter nome e tamanho ajustados neste OBS. Anúncios separa mensagens criadas na aba Eventos dos eventos ativos de GERAL EVENTOS do Hall; ambas as listas compartilham seleção, intervalo automático e posição configurável da imagem. Mensagens criadas seguem datas e hora final; eventos do Hall usam NOME EVENTO, BADGE EVENTO, DESCRIÇÃO e STATUS ativo. Masterizações mantém a coleta direta e somente leitura da aba Masterizações, com atualização automática, intervalo próprio, opção para ocultar a lista, prévias cronológicas e controles de fila. Mensagens de teste permanece no código, mas oculta da navegação. A coleta do Merlin usa a planilha do Google, não o Worker nem o KV. A tecla F1 abre e fecha o painel.
+
+As abas Masterizações e catálogo do Hall (incluindo MEMBROS) precisam permitir leitura sem login no navegador da fonte OBS. O mascote selecionado anuncia pendentes da mais antiga para a mais recente, em uma única entrada/saída para a sequência. O tamanho automático das imagens acompanha a altura total do texto, medido uma vez e limitado. A fonte do anúncio pode ser escolhida entre Arial, Verdana, Trebuchet MS, Georgia e Courier New. “Limpar cache e buscar novamente” apaga os registros e o catálogo local de jogos e fotos do Hall e inicia nova leitura. As fotos dos membros vêm da coluna FOTO da aba MEMBROS, associadas pelo ID. O tempo oferece horas/minutos, dias/horas/minutos, horas/minutos/segundos e segundos. As chaves são `{Membro}`, `{Jogo}`, `{Console}`, `{Tempo}` e `{Evento}`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
